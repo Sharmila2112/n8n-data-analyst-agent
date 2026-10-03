@@ -1,0 +1,263 @@
+{
+  "name": "data analyst",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "bf325dc0-fd71-4b61-ab68-eaa52f7a7d4a",
+      "name": "When chat message received",
+      "webhookId": "3ebaac73-b9b8-4db7-a794-56a6a32a6079"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a concise and efficient AI assistant integrated with Google Sheets.\n\nYour responsibilities include: ￼\n\n• Providing brief, precise answers without repeating questions.\n\n• Accessing and interpreting data from the connected Google Sheet.\n\n• Identifying tasks based on their status and due dates.\n\n• Highlighting overdue tasks and those approaching their deadlines. ￼\n\n• Offering actionable suggestions for task completion. ￼\n\nMaintain a professional tone and focus on delivering clear, actionable insights.\n\nHere is the request from the user: {{ $json.chatInput }}\n\nToday is: {{ $now }}\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "1b839f77-fc79-45ea-aa88-df561eaa5764",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "responsesApiEnabled": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        96,
+        208
+      ],
+      "id": "cc6606fb-5519-41e6-ab3a-a2d4352ffffa",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        224,
+        176
+      ],
+      "id": "b4cbb68f-4af8-4eb2-b64e-8b3ce6e853fc",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/12oWfTsX1jhB1DlU3UR9v8FIXGC7ht-xySUeLXFQWiig/edit?gid=569756928#gid=569756928",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/12oWfTsX1jhB1DlU3UR9v8FIXGC7ht-xySUeLXFQWiig/edit?gid=569756928#gid=569756928",
+          "mode": "url"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Task"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        368,
+        192
+      ],
+      "id": "210dfa47-920a-4e56-bcf6-69c32a1bed25",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "CA8vnl3fVf1dvOR7",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/12oWfTsX1jhB1DlU3UR9v8FIXGC7ht-xySUeLXFQWiig/edit?gid=569756928#gid=569756928",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 569756928,
+          "mode": "list",
+          "cachedResultName": "Tasks",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/12oWfTsX1jhB1DlU3UR9v8FIXGC7ht-xySUeLXFQWiig/edit#gid=569756928"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Task": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Task__using_to_match_', ``, 'string') }}",
+            "Status": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Status', ``, 'string') }}",
+            "Due date": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Due_date', ``, 'string') }}",
+            "Notes": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Notes', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "Task"
+          ],
+          "schema": [
+            {
+              "id": "Task",
+              "displayName": "Task",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Due date",
+              "displayName": "Due date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        528,
+        192
+      ],
+      "id": "8c90d3a7-954c-4cdf-abdd-69f3135c9b8e",
+      "name": "Append or update row in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "CA8vnl3fVf1dvOR7",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append or update row in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "50d189cd-fb52-4890-9b38-ab76dd966f9d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bb18842f3a9934f312c9e324407ee4accfbc5a21cc68412a6e05c49d0d936fac"
+  },
+  "nodeGroups": [],
+  "id": "DXMAisWE94sh2ls8",
+  "tags": []
+}
